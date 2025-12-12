@@ -185,10 +185,11 @@ High-level comparison:
 #### Project Structure
 
     project-root/
-    ├── main.py               # Entry point; Tkinter GUI logic
-    ├── kmeans.py             # Manual implementation of K-Means algorithm
-    ├── regression.py         # Linear & Polynomial regression logic
-    ├── preprocessing.py      # Data cleaning and normalization pipeline
+    ├── source_code/
+    │   └── main.py           # Entry point; Tkinter GUI logic
+    │   └── kmeans.py         # Manual implementation of K-Means algorithm
+    │   └── regression.py     # Linear & Polynomial regression logic
+    │   └── preprocessing.py  # Data cleaning and normalization pipeline      
     ├── data/
     │   └── product_sales.csv # Dataset
     ├── README.md             # Project documentation
@@ -262,7 +263,7 @@ Test cases:
 
 #### AI Tool Usage
 
-During the implementation of this project, we used **Generative AI tools** such as **Google Gemini** and **GitHub Copilot** for:
+During the implementation of this project, we used AI tools such as **Google Gemini** and **GitHub Copilot** for:
 
 - **Debugging**:
   - Identifying and fixing vectorization issues in the manual K-Means distance calculation.
