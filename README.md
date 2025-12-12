@@ -32,7 +32,7 @@ This project is an interactive application that simulates a supermarket transact
 No set up, run the main python file
 
 # Clone or extract project
-(https://github.com/CristianAld/DataMining.git)
+(https://github.com/thatsnotrlght/ML-Product-Performance-Analysis.git)
 
 # Install dependencies
 pip install pandas
