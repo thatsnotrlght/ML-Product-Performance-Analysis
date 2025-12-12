@@ -11,8 +11,7 @@
 
 #### System Overview
 
-This project is an interactive application that simulates a supermarket transaction system to perform Association Rule Mining on customer data. It integrates a data preprocessing pipeline with custom implementations of the Apriori and Eclat algorithms to discover and compare purchasing patterns. The tool features a user-friendly dashboard for generation transacations, visualizing algorithmic performs in the console, and querying product recommendations based on association strength.
-
+Our project was made to analyze supermarket product sales containing 200 records using machine learning techniques discussed in class. We made our project using python as the main development language. We implemented a K-means clustering algorithm which segments products based on specific features which include price and sales volume. Furthermore, we applied a regression model which predicted monthly profits, it also compares the performance of linear and polynomial models.
 
 
 #### Technical Stack
