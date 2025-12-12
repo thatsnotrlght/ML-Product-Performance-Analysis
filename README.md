@@ -1,4 +1,4 @@
-### Interactive Supermarket Simulation with Association Rule Mining
+### Product Sales Analysis Dashboard
 
 #### Author Information
 
@@ -11,13 +11,30 @@
 
 #### System Overview
 
-Our project was made to analyze supermarket product sales containing 200 records using machine learning techniques discussed in class. We made our project using python as the main development language. We implemented a K-means clustering algorithm which segments products based on specific features which include price and sales volume. Furthermore, we applied a regression model which predicted monthly profits, it also compares the performance of linear and polynomial models.
+Our project was made to analyze supermarket product sales containing **200 records** using machine learning techniques discussed in class. We built the system using **Python** as the main development language and integrated a **Tkinter GUI dashboard**.
+
+The system:
+
+- Implements a **custom K-Means clustering algorithm** to segment products based on features like **price** and **units sold**, allowing business-level labels such as “Budget”, “Mid-range”, and “Premium”.
+- Applies **regression models** to **predict monthly profit**, comparing the performance of:
+  - **Linear Regression**
+  - **Polynomial Regression (Degree 2)**
+
+The emphasis of the project is on understanding the **mechanics** of the algorithms by:
+
+- Implementing **K-Means from scratch**
+- Using **scikit-learn** for Linear and Polynomial Regression and comparing their performance
+
 
 
 #### Technical Stack
 
-- **Language**: Python 3.0
-- **Key Libraries**: Pandas, matplotlib, sklearn, numpy
+- **Language**: Python 3.x
+- **Key Libraries**:
+  - `pandas`
+  - `numpy`
+  - `matplotlib`
+  - `scikit-learn`
 - **UI Framework**: Tkinter
 
 
@@ -25,117 +42,248 @@ Our project was made to analyze supermarket product sales containing 200 records
 #### Installation
 
 ##### Prerequisites
-- Python 3
+- Python 3.8+ installed
 
 ##### Setup
-No set up, run the main python file
 
-# Clone or extract project
-(https://github.com/thatsnotrlght/ML-Product-Performance-Analysis.git)
+No complex setup is required beyond cloning and installing dependencies.
 
-# Install dependencies
-pip install pandas
-pip install numpy
-pip install matplotlib 
-pip install -U scikit-learn
+Clone or extract the project:
 
-# Run application
-Run Main python file 
+- Repository:
+    https://github.com/thatsnotrlght/ML-Product-Performance-Analysis.git
+
+Install dependencies:
+
+- From your terminal:
+
+    pip install pandas
+    pip install numpy
+    pip install matplotlib
+    pip install -U scikit-learn
+
+Run application:
+
+- From the project root, run:
+
+    python main.py
+
+
 
 #### Usage
 
-##### 1. Load Data
-- **Manual Entry**: Click items to create transactions
-- **Import CSV**: Use "Import" button to load `sample_transactions.csv`
+The application is divided into **three main tabs**:
 
-##### 2. Preprocess Data
-- Automatically runs data for you when you import the sample_transaction.csv
+##### 1. Data Overview
 
-##### 3. Run Mining
-- Set minimum support and confidence thresholds already added. 
-- Wait for completion (~1-3 seconds)
+- Automatically loads `product_sales.csv` on launch.
+- Displays dataset health metrics:
+  - Total number of records
+  - Number of features
+  - Presence or absence of missing values
+- Shows a **log of preprocessing actions**, for example:
+  - “Imputed `price` with median”
+  - “Scaled `units_sold` with Min-Max Scaling”
+- Provides a **scrollable table** of numerical statistics (mean, std, min, max, quartiles) for all numerical features.
 
-##### 4. Query Results
-- Select product from dropdown
-- View associated items and recommendation report strength
+##### 2. Clustering Analysis
+
+- Implements **K-Means clustering** on selected features such as:
+  - Price
+  - Units Sold
+  - Profit (if included)
+- Elbow Method:
+  - Displays the **Within-Cluster Sum of Squares (WCSS)** curve to help choose the optimal number of clusters `k`.
+- Cluster Visualization:
+  - Plots a **scatter diagram** (e.g., Price vs. Units Sold) with products colored according to their cluster.
+- Cluster Statistics Table:
+  - For each cluster, shows:
+    - Average price
+    - Average units sold
+    - Average profit
+  - Useful for interpreting clusters as **“Budget”**, **“Mid-range”**, or **“Premium”** segments.
+
+##### 3. Regression Analysis
+
+- Trains two models to **predict product profit**:
+  - **Linear Regression** – baseline model.
+  - **Polynomial Regression (Degree 2)** – captures non-linear relationships (e.g., price and units interactions).
+- Comparison Table:
+  - Displays performance metrics:
+    - MSE (Mean Squared Error)
+    - MAE (Mean Absolute Error)
+  - For both Linear and Polynomial models.
+- Prediction Plot:
+  - Visualizes **Actual vs. Predicted** profit to see how well the model fits the data.
+
 
 
 #### Algorithm Implementation
 
-##### Apriori
-The Apriori implementation utilizes a dictionary of TID-sets (vertical data encoding), instead of traditional horizontal, to allow for efficient support counting through set intersections rather than repeated database scans. The algorithm proceeds with a breadth-first, level-wise candidate generation strategy, iteratively building larger itemsets from valid smaller ones. The pruning strategy is based on a minimum support threshold, discarding infrequent itemsets at each level before proceeding.
+##### K-Means (Manual Implementation)
 
-##### Eclat
-The Eclat implementation uses a vertical TID-set representation, mapping each item directly to the set of transaction IDs in which it appears. It employs a depth first search strategy, recursively extending frequent itemsets to explore the search space. Support counting is performed through set intersection operations, allowing the algorithm to determine the support of candidate itemsets without scanning the entire database.
+The **K-Means clustering** algorithm is implemented **from scratch** in `kmeans.py` without using high-level clustering libraries.
+
+Core ideas:
+
+- **Initialization**:
+  - Randomly selects `k` data points as the initial centroids.
+
+- **Assignment Step**:
+  - For each data point, computes the **Euclidean distance** to each centroid.
+  - Uses **NumPy vectorization** for efficient distance computation.
+  - Assigns each point to the nearest centroid.
+
+- **Update Step**:
+  - For each cluster, recomputes the centroid as the **mean** of all points assigned to that cluster.
+
+- **Convergence**:
+  - Repeats Assignment and Update steps until:
+    - The movement of centroids is below a tolerance threshold (e.g., `1e-4`), or
+    - A maximum number of iterations is reached.
+
+This manual implementation allows fine-grained understanding of how K-Means works internally, including centroid updates and distance calculations.
+
+##### Regression Analysis
+
+The regression logic is handled in `regression.py` using **scikit-learn**:
+
+- **Linear Regression**:
+  - Uses features such as:
+    - Price
+    - Cost
+    - Units Sold
+  - Provides a **baseline** for predicting profit.
+
+- **Polynomial Regression (Degree 2)**:
+  - Uses `PolynomialFeatures` to generate:
+    - Squared terms (e.g., `price^2`)
+    - Interaction terms (e.g., `price × units_sold`)
+  - Trains a regression model on this expanded feature set.
+  - Better captures the **non-linear nature** of profit calculations.
+  - Consistently provides **lower MSE and MAE** compared to the linear model on this dataset.
+
+
 
 #### Performance Results
 
-Tested on provided dataset (80-100 transactions after cleaning):
+Tested on the `product_sales.csv` dataset (200 records):
 
-| Algorithm | Runtime (ms) | Rules Generated | Memory Usage |
-|-----------|--------------|-----------------|--------------|
-| Apriori   | 0.0          | [11]            | [0.04MB]     |
-| Eclat     | 1.0          | [11]            | [0.01MB]     |
+- Polynomial Regression (Degree 2) generally:
+  - Achieves **lower MSE** and **lower MAE** than Linear Regression.
+  - Provides a closer fit between **actual** and **predicted** profits.
 
-**Parameters**: min_support = 0.2, min_confidence = 0.5
+High-level comparison:
 
-**Analysis**: 
-Based on the analysis done and the test case used we are able to find that Apriori algorithm was indeed faster than Eclat but Apriori actually consumed 0.03 more MB of Memory than Eclat which means Eclat is slower but utilizes less Memory. 
+| Model                         | Relative Performance           |
+|------------------------------|--------------------------------|
+| Linear Regression            | Higher error; baseline model   |
+| Polynomial Regression (deg2) | Lower error; better fit        |
+
+
 
 #### Project Structure
 
-```
-project-root/
-├── main.py
-├── Kmeans.py
-├── regression.py
-├── preprocessing.py
-├── data/
-│   ├── product_sales.csv
-├── README.md
-├── REPORT.pdf
-```
+    project-root/
+    ├── main.py               # Entry point; Tkinter GUI logic
+    ├── kmeans.py             # Manual implementation of K-Means algorithm
+    ├── regression.py         # Linear & Polynomial regression logic
+    ├── preprocessing.py      # Data cleaning and normalization pipeline
+    ├── data/
+    │   └── product_sales.csv # Dataset
+    ├── README.md             # Project documentation
+    └── REPORT.pdf            # Final analysis report
+
+
+
 #### Data Preprocessing
 
-Issues handled:
-- Total transactions scanned: 100
-- Empty transactions: 5 removed
-- Single-item transactions: 6 removed
-- Duplicate items: 9 instances cleaned
-- Invalid items: 2 removed
-- Extra whitespace: trimmed from all items
+Preprocessing logic is implemented in `preprocessing.py`. It handles common real-world data issues automatically.
+
+Operations:
+
+- **Missing Values**:
+  - Numeric features:
+    - Filled with **median** values.
+  - Categorical features:
+    - Filled with **mode** (most frequent) values.
+
+- **Outliers**:
+  - Detected via **IQR (Interquartile Range)** method.
+  - Outliers are **capped (Winsorized)** to reduce their effect on:
+    - K-Means clustering
+    - Regression models
+
+- **Normalization**:
+  - Applies **Min-Max Scaling** to all numerical features, mapping them to the **[0, 1]** range.
+  - This is critical for K-Means so that features with larger raw ranges (e.g., `units_sold` in [0, 1000]) do not overpower features like `price` in [0, 20].
+
+Example effects:
+
+- After preprocessing:
+  - Number of missing numeric values → 0
+  - All numeric features scaled between 0 and 1
+  - Extreme outliers reduced in impact
 
 
 
 #### Testing
 
 Verified functionality:
-- [✓] CSV import and parsing
-- [✓] All preprocessing operations
-- [✓] Two algorithm implementations
-- [✓] Interactive query system
-- [✓] Performance measurement
+
+- [✓] CSV loading and basic error handling
+- [✓] Preprocessing steps (missing values, outlier handling, normalization)
+- [✓] Manual K-Means clustering and convergence
+- [✓] Regression models (Linear and Polynomial) and metric computation
+- [✓] Tkinter GUI interaction across all tabs (Data Overview, Clustering, Regression)
 
 Test cases:
-| Feature tested | Test Data input | Expected Outcome|
-|-----------|--------------|-----------------|
-| Case Inconsistency   | Milk, milk, BREAD     | Items are standardized to {'milk', 'bread'}           |
-| Duplicate Item counting     | T1: Bread, Milk, Milk       | Preprocessing Report: Duplicates detected: 1. Final transaction: {bread, milk}|
+
+| Component      | Test Input                        | Expected Outcome                                                          |
+|----------------|-----------------------------------|----------------------------------------------------------------------------|
+| Preprocessing  | Missing values in `price`         | Missing values are filled with the **median price**; no NaNs remain       |
+| K-Means        | `k = 3`                           | Segmentation into “Budget”, “Mid-range”, and “Premium” product groups     |
+| Regression     | Polynomial Regression (Degree 2)  | **MAE and MSE decrease** relative to the Linear Regression baseline       |
+| Normalization  | Features with different scales    | All numeric features scaled to **[0, 1]**, improving K-Means performance  |
+
 
 
 #### Known Limitations
-Since the Apriori implementation is not library-optimized, generating candidates for every iteration can lead to significant memory use, especially with dense datasets or when the maximum frequent itemset size is large.
+
+- **Dataset Size**:
+  - The dataset has **only 200 records**, which is relatively small.
+  - This can increase the risk of **overfitting**, especially for the Polynomial Regression model.
+
+- **Manual K-Means Performance**:
+  - The K-Means implementation uses Python + NumPy loops and vectorization.
+  - For very large datasets, it will be **slower** than optimized, C-based implementations such as `sklearn.cluster.KMeans`.
 
 
 
 #### AI Tool Usage
-During the implementation of this project, we relied on Gemini AI, primarily for coding assistance. We used it to help guide and explain functionalities like how to implement preprocessing for CSV standardization, and helping to walk through the complex logic and implementation of the Association rule mining algorithms. At first we prototyped by having Gemini generate HTML/ Javascript code for the initial interactive system, but ended up making the change to Tkinter. Github Copilot was also used to help during the implementation phase to help reduce and understand boilerplate code when writing the Tikinter UI and integrating the performance tracking. AI definitely helped us in the developing and debugging phase of the algorithms and assisting with general project documentation and allowed us to propel the development of this project.
+
+During the implementation of this project, we used **Generative AI tools** such as **Google Gemini** and **GitHub Copilot** for:
+
+- **Debugging**:
+  - Identifying and fixing vectorization issues in the manual K-Means distance calculation.
+- **UI Prototyping**:
+  - Generating boilerplate for the **Tkinter tabbed interface** (Data, Clustering, Regression tabs).
+- **Concept Explanation**:
+  - Clarifying the differences between **Standard Scaling** and **Min-Max Normalization** in the context of K-Means.
+- **Documentation Support**:
+  - Assisting in structuring both the **REPORT.pdf** and this **README**.
+
+AI tools supported the development and debugging process, while we were responsible for understanding, integrating, and adapting the code and algorithms to fit the project requirements.
+
+
 
 #### References
 
-- Course lecture materials
+- Course lecture materials (CAI 4002 - Artificial Intelligence)
 - Google Gemini AI
-- Copilot 
-- Pandas Doc
-- Tkinter Doc
-- psutil Doc
+- GitHub Copilot
+- Pandas Documentation
+- NumPy Documentation
+- Scikit-Learn Documentation
+- Tkinter Documentation
+- Matplotlib Documentation
